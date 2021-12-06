@@ -15,22 +15,22 @@ function makeObjectDeepCopy(obj) {
     }
     return Array.isArray(obj) ? (copy.length = obj.length) && Array.from(copy) : copy;
 }
-// var obj = [new Date(), new RegExp(/aaa/i), [1, [2,3]], { a: 1, b: 2 }];
+//  var obj = [new Date(), new RegExp(/aaa/i), [1, [2,3]], { a: 1, b: 2 }];
 
-// var obj =
-// {
-//     date: new Date(),
-//     func: function (q) { return 1 + q; },
-//     num: 123,
-//     text: "asdasd",
-//     array: [1, "asd"],
-//     regex: new RegExp(/aaa/i),
-//     subobj:
-//     {
-//         num: new Date(),
-//         text: "asdsaD"
-//     }
-// };
+var obj =
+{
+    date: new Date(),
+    func: function (q) { return 1 + q; },
+    num: 123,
+    text: "asdasd",
+    array: [1, "asd"],
+    regex: new RegExp(/aaa/i),
+    subobj:
+    {
+        num: new Date(),
+        text: "asdsaD"
+    }
+};
 
 // const testObject = {
 //     one: 1,
