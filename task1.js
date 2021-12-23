@@ -52,22 +52,30 @@ function lock() {
 
 }
 
+function round(result) {
+    let remainder = Math.round((+result).toFixed(10).toString().slice(10) / 10);
+    return countDecimals(+result) > 8 ? (+result).toFixed(8) + remainder : +(result);
+}
+
 
 function compute() {
     if (number1 !== '' && number2 !== '') {
         switch (operator) {
             case '+':
                 result = +number1 + +number2;
+                result = round(result);
                 number1 = result.toString();
                 number2 = '';
                 break;
             case '-':
                 result = +number1 - +number2;
+                result = round(result);
                 number1 = result.toString();
                 number2 = '';
                 break;
             case 'x':
                 result = +number1 * +number2;
+                result = round(result);
                 number1 = result.toString();
                 number2 = '';
                 break;
@@ -79,10 +87,7 @@ function compute() {
                 }
                 else {
                     result = number1 / number2;
-
-                    let remainder = Math.round((+result).toFixed(10).toString().slice(10) / 10);
-
-                    result = countDecimals(+result) > 8 ? (+result).toFixed(8) + remainder : +(result);
+                    result = round(result);
                     number1 = result.toString();
                     number2 = '';
                 }
@@ -91,20 +96,23 @@ function compute() {
             default:
                 break;
         }
+
+        
     }
 
 
     if (event.target.textContent == '√' && number1 !== '') {
         result = Math.sqrt(number1);
+        result = round(result);
         number1 = result.toString();
         number2 = '';
-        solution.textContent = result;
         operatorText.textContent = '';
-
+        solution.textContent = result;
     }
 
     if (event.target.textContent == '𝓍²' && number1 !== '') {
         result = Math.pow(number1, 2);
+        result = round(result);
         number1 = result.toString();
         number2 = '';
         operatorText.textContent = '';
@@ -125,7 +133,7 @@ document.body.addEventListener('click', function (event) {
         }
         if (isOperationClicked) {
             number2 = -number2;
-            solution.textContent = result;
+            solution.textContent = number2;
         }
     }
 
@@ -139,13 +147,15 @@ document.body.addEventListener('click', function (event) {
 
 
     if (target.classList.contains('calc-button-operand')) {
+       
         isOperationClicked = true;
 
         solution.textContent = '';
-
+        
         compute();
         operator = target.textContent;
         if (operator !== '√' && operator !== '𝓍²') operatorText.textContent = result + operator;
+        
     }
 
     if (target.textContent == 'AC') clear();
