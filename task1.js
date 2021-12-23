@@ -1,182 +1,117 @@
-const solution = document.querySelector('.calc-solution');
-const operatorText = document.querySelector('.calc-operator');
-const buttons = document.querySelectorAll('.calc-button');
-let number1 = '';
-let number2 = '';
-let result = '';
-let isOperationClicked = false;
-let operator = '';
+class Car {
+    #brand;
+    #model;
+    #yearOfManufacturing;
+    #maxSpeed ;
+    #maxFuelVolume;
+    #fuelConsumption ;
+    #currentFuelVolume = 0;
+    #isStarted = false;
+    #mileage = 0;
 
-function clear() {
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove('lock');
+    set brand(value){
+        if (value.length < 1 || value.length >= 50) throw new Error('invalid value');
+        this.#brand = value;
     }
 
-    solution.textContent = '';
-    operatorText.textContent = '';
-    isOperationClicked = false;
-    number1 = '';
-    number2 = '';
-    result = '';
-    isOperationClicked = false;
-    operator = '';
-}
-
-var countDecimals = function (value) {
-    if (Math.floor(value) !== value)
-        return value.toString().split(".")[1].length || 0;
-    return 0;
-}
-
-function addNumber(number) {
-
-    if (!isOperationClicked) {
-        if (number === '.' && number1.includes('.')) return;
-        number1 += number;
-        result = number1;
-
-    }
-    if (isOperationClicked) {
-        if (number === '.' && number2.includes('.')) return;
-        number2 += number;
-
-    }
-}
-
-function lock() {
-    if (solution.textContent == 'Error') {
-        for (let i = 0; i < buttons.length; i++) {
-            if (buttons[i].textContent !== 'AC') buttons[i].classList.add('lock');
-        }
-    };
-
-}
-
-function round(result) {
-    let remainder = Math.round((+result).toFixed(10).toString().slice(10) / 10);
-    return countDecimals(+result) > 8 ? (+result).toFixed(8) + remainder : +(result);
-}
-
-
-function compute() {
-    if (number1 !== '' && number2 !== '') {
-        switch (operator) {
-            case '+':
-                result = +number1 + +number2;
-                result = round(result);
-                number1 = result.toString();
-                number2 = '';
-                break;
-            case '-':
-                result = +number1 - +number2;
-                result = round(result);
-                number1 = result.toString();
-                number2 = '';
-                break;
-            case 'x':
-                result = +number1 * +number2;
-                result = round(result);
-                number1 = result.toString();
-                number2 = '';
-                break;
-            case '÷':
-                if (number2 == 0) {
-                    solution.textContent = 'Error';
-                    operatorText.textContent = '';
-                    lock();
-                }
-                else {
-                    result = number1 / number2;
-                    result = round(result);
-                    number1 = result.toString();
-                    number2 = '';
-                }
-                break;
-
-            default:
-                break;
-        }
-
-        
+    get brand(){
+        return this.#brand;
     }
 
-
-    if (event.target.textContent == '√' && number1 !== '') {
-        result = Math.sqrt(number1);
-        result = round(result);
-        number1 = result.toString();
-        number2 = '';
-        operatorText.textContent = '';
-        solution.textContent = result;
+    set model(value){
+        if (value.length < 1 || value.length >= 50) throw new Error('invalid value');
+        this.#model = value;
     }
 
-    if (event.target.textContent == '𝓍²' && number1 !== '') {
-        result = Math.pow(number1, 2);
-        result = round(result);
-        number1 = result.toString();
-        number2 = '';
-        operatorText.textContent = '';
-        solution.textContent = result;
-
+    get model(){
+        return this.#model;
     }
-}
 
+    set yearOfManufacturing(value){
+        if (value < 1900 || value >= new Date().getFullYear()) throw new Error('invalid value');
+        this.#yearOfManufacturing = value;
+    }
 
-document.body.addEventListener('click', function (event) {
-    let target = event.target;
+    get yearOfManufacturing(){
+        return this.#yearOfManufacturing;
+    }
 
-    if (target.textContent == '+/-') {
-        if (!isOperationClicked) {
-            number1 = -number1;
-            result = number1;
-            solution.textContent = result;
-        }
-        if (isOperationClicked) {
-            number2 = -number2;
-            solution.textContent = number2;
+    set maxSpeed(value){
+        if (value < 100 || value > 300) throw new Error('invalid value');
+        this.#maxSpeed = value;     
+    }
+
+    get maxSpeed() {
+        return this.#maxSpeed;
+    }
+
+    set maxFuelVolume(value) {
+        if (value < 5 || value > 20) throw new Error('invalid value');
+        this.#maxFuelVolume = value;     
+    }
+
+    get maxFuelVolume(){
+        return this.#maxFuelVolume;
+    }
+
+    set fuelConsumption(value){
+        this.#fuelConsumption = value;  
+    }
+
+    get fuelConsumption(){
+        return this.#fuelConsumption;
+    }
+
+    get currentFuelVolume(){
+        return this.#currentFuelVolume;
+    }
+
+    get isStarted(){
+        return this.#isStarted;
+    }
+
+    get mileage(){
+        return this.#mileage;
+    }   
+
+    start() {
+        if (this.#isStarted === true) throw new Error('Машина уже заведена');
+        else this.#isStarted = true;
+    }
+
+    shutDownEngine() {
+        if (this.#isStarted === false) throw new Error('Машина еще не заведена');
+        else this.#isStarted = false;
+    }
+
+    fillUpGasTank(fuel) {
+        if (!Number.isInteger(fuel)) throw new Error('Неверное количество топлива для заправки');
+        else
+        if (fuel < 0 || fuel === 0) throw new Error('Неверное количество топлива для заправки');
+        else
+        if (this.#currentFuelVolume >= 20) throw new Error('Топливный бак переполнен');
+        else this.#currentFuelVolume += fuel;
+    }
+
+    drive(speed,hours) {
+        if (!Number.isInteger(speed) || speed <= 0) throw new Error('Неверная скорость');
+        else
+        if (!Number.isInteger(hours || hours <= 0)) throw new Error('Неверное количество часов');
+        else
+        if (speed > this.#maxSpeed) throw new Error('Машина не может ехать так быстро');
+        else 
+        if (this.#isStarted === false) throw new Error('Машина должна быть заведена, чтобы ехать');
+        else 
+        if (this.#currentFuelVolume === 0) throw new Error('Недостаточно топлива');
+        else {
+            this.#mileage += speed * hours;
+            this.#fuelConsumption = this.#fuelConsumption / 100;
         }
     }
+}
 
 
-
-    if (target.classList.contains('calc-button-digit')) {
-        addNumber(target.textContent);
-        if (!isOperationClicked) solution.textContent = number1;
-        if (isOperationClicked) solution.textContent = number2;
-    }
-
-
-    if (target.classList.contains('calc-button-operand')) {
-       
-        isOperationClicked = true;
-
-        solution.textContent = '';
-        
-        compute();
-        operator = target.textContent;
-        if (operator !== '√' && operator !== '𝓍²') operatorText.textContent = result + operator;
-        
-    }
-
-    if (target.textContent == 'AC') clear();
-
-
-    if (target.textContent == '=') {
-        compute();
-        operatorText.textContent = '';
-        solution.textContent = result;
-    }
-
-    console.log('number1:', number1);
-
-    console.log('number2:', number2);
-    console.log('result: ', result);
-    console.log('operator', operator);
-
-
-    // console.log('b: ', b);
-    // console.log('bufer: ', bufer);
-    // // console.log('isOperationClicked', isOperationClicked);
-
-    // console.log('----------------------------------------------');
-});
+let car = new Car;
+car.brand = 'm';
+car.brand = '';
+console.log(car.brand);
